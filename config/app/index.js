@@ -1,7 +1,6 @@
 export const config = {
   allowedOrigins: [
-    `${process.env.APP_GATEWAY_URL}:${process.env.APP_GATEWAY_PORT}`,
-    `${process.env.APP_WALLET_CLIENT_URL}`
+    `${process.env.APP_GATEWAY_URL}:${process.env.APP_GATEWAY_PORT}`
   ],
   corsOptions: {
     origin: true,
@@ -12,6 +11,12 @@ export const config = {
 
 export const corsOptionsDelegate = (req, callback) => {
   let origin = req.header('Origin')
+  const allowedOrigins = process.env.ALLOWED_ORIGINS
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(origin => origin.length > 0)
+
+  config.allowedOrigins.push(...allowedOrigins)
 
   const normalizedOrigin = origin?.trim().toLowerCase();
   const allowed = config.allowedOrigins.map(o => o.trim().toLowerCase());
