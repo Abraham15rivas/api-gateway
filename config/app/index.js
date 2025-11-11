@@ -5,22 +5,21 @@ export const config = {
   ],
   corsOptions: {
     origin: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
   }
 }
 
 export const corsOptionsDelegate = (req, callback) => {
-  let response = null
-  let corsOptions
   let origin = req.header('Origin')
 
-  if (origin && config.allowedOrigins.indexOf(origin) !== -1) {
-    corsOptions = { ...config.corsOptions }
-  } else {
-    corsOptions = { origin: false }
-		response = new Error('Not allowed by CORS')
-  }
+  const normalizedOrigin = origin?.trim().toLowerCase();
+  const allowed = config.allowedOrigins.map(o => o.trim().toLowerCase());
 
-  callback(response, corsOptions)
+  if (normalizedOrigin && allowed.includes(normalizedOrigin)) {
+    callback(null, { ...config.corsOptions });
+  } else {
+    console.warn('Blocked by CORS:', origin);
+    callback(new Error('Not allowed by CORS'), { origin: false });
+  }
 }
