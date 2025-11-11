@@ -18,7 +18,7 @@ import { corsOptionsDelegate } from './config/app/index.js'
 //==================================================
 const app = express();
 
-const AppGatewayPort        = process.env.APP_GATEWAY_PORT || 4000;
+const appGatewayPort        = process.env.APP_GATEWAY_PORT || 4000;
 const appServiceDbLayerUrl  = process.env.APP_SERVICE_DB_LAYER_URL || 'http://localhost:3000';
 
 app.use(logger('dev'));
@@ -49,7 +49,7 @@ app.use((req, res) => {
 });
 
 /* Run Serve */
-app.listen(AppGatewayPort, async () => {
-  console.log(`🚀 API Gateway (Fachada) listening on port ${AppGatewayPort}`);
+app.listen(appGatewayPort, async () => {
+  console.log(`🚀 API Gateway (Fachada) listening on port ${appGatewayPort}`);
   console.log(`➡️  Proxying requests to REST DB Service at ${appServiceDbLayerUrl}`);
 })
